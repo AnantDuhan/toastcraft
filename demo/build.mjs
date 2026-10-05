@@ -14,11 +14,11 @@ const links = [
 ].filter(Boolean).join('');
 
 const html = read('./template.html')
-  .replace('<!--LINKS-->', links)
-  .replaceAll('npm i toastcraft', `npm i ${pkg.name}`)
+  .replace('<!--LINKS-->', '<a href="https://www.npmjs.com/package/toastcraft">npm</a><a href="https://github.com/AnantDuhan/toastcraft">GitHub</a>')
   .replace('/*BUNDLE*/', () => bundle);
 
-// Output to site/ so GitHub Pages can deploy it as-is.
-mkdirSync(new URL('../site/', import.meta.url), { recursive: true });
-writeFileSync(new URL('../site/index.html', import.meta.url), html);
-console.log(`site/index.html built for ${pkg.name}@${pkg.version}`);
+// Output to docs/ so GitHub Pages can deploy it as-is.
+mkdirSync(new URL('../docs/', import.meta.url), { recursive: true });
+writeFileSync(new URL('../docs/index.html', import.meta.url), html);
+writeFileSync(new URL('../docs/.nojekyll', import.meta.url), '');
+console.log('Built docs/index.html');
