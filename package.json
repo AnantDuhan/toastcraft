@@ -26,7 +26,8 @@
     "test": "vitest run",
     "typecheck": "tsc --noEmit",
     "demo": "npm run build && node demo/build.mjs",
-    "prepublishOnly": "npm run typecheck && npm test && npm run build"
+    "prepublishOnly": "npm run typecheck && npm test && npm run build",
+    "deploy": "npm run demo && git add docs && git commit -m \"docs: update playground\" && git push"
   },
   "devDependencies": {
     "happy-dom": "^15.11.0",
