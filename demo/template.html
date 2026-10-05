@@ -1,0 +1,272 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>toastcraft playground</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#e8ebf1;--panel:#f6f7fa;--ink:#1a2030;--muted:#5b6478;--line:#cfd4de;--pick:#3346c9;--pick-ink:#fff;--tile:#dde1e9;
+  --display:"Bricolage Grotesque",ui-sans-serif,system-ui,sans-serif;
+  --body:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+  box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#12151c;--panel:#1a1e27;--ink:#e8ebf2;--muted:#9aa3b5;--line:#2c3240;--pick:#8b98ff;--pick-ink:#0f1222;--tile:#20252f}}
+:root[data-theme="dark"]{--bg:#12151c;--panel:#1a1e27;--ink:#e8ebf2;--muted:#9aa3b5;--line:#2c3240;--pick:#8b98ff;--pick-ink:#0f1222;--tile:#20252f}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*,*::before,*::after{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.55 var(--body)}
+.wrap{max-width:1240px;margin:0 auto;padding:40px 24px 64px}
+header{display:grid;grid-template-columns:1fr auto;gap:24px;align-items:end;margin-bottom:36px}
+h1{font-family:var(--display);font-weight:700;font-size:clamp(44px,7vw,84px);line-height:.95;letter-spacing:-.035em;margin:0}
+.lede{max-width:52ch;color:var(--muted);margin:14px 0 0;font-size:17px}
+.install{display:flex;align-items:center;gap:10px;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:10px 10px 10px 16px;font-family:var(--mono);font-size:14px;white-space:nowrap}
+.install button{font:600 13px var(--body);border:0;border-radius:7px;padding:7px 12px;background:var(--pick);color:var(--pick-ink);cursor:pointer}
+.layout{display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:28px;align-items:start}
+h2{font-family:var(--display);font-weight:500;font-size:22px;letter-spacing:-.01em;margin:0 0 4px}
+.sub{color:var(--muted);margin:0 0 16px;font-size:14px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:12px}
+.tile{position:relative;appearance:none;text-align:left;border:1.5px solid transparent;border-radius:14px;background:var(--tile);padding:0;cursor:pointer;color:inherit;font:inherit;overflow:hidden}
+.tile:hover{border-color:var(--line)}
+.tile[aria-pressed="true"]{border-color:var(--pick);box-shadow:0 0 0 3px color-mix(in srgb,var(--pick) 25%,transparent)}
+.tile:focus-visible{outline:3px solid var(--pick);outline-offset:2px}
+.stage{position:relative;height:128px;transform:translateZ(0);pointer-events:none}
+.tile[data-d="neumorphic"] .stage{background:#e6e9ef}
+.tile-name{display:flex;justify-content:space-between;padding:8px 14px 10px;font-weight:600;font-size:14px}
+.tile-name span{color:var(--muted);font-weight:400}
+aside{position:sticky;top:20px;background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:20px}
+fieldset{border:0;margin:0 0 18px;padding:0}
+legend,label.lbl{display:block;font-weight:600;font-size:13px;margin-bottom:7px}
+.seg{display:flex;flex-wrap:wrap;gap:6px}
+.seg button{font:500 13px var(--body);border:1px solid var(--line);background:transparent;color:var(--ink);border-radius:8px;padding:6px 10px;cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--ink);color:var(--panel);border-color:var(--ink)}
+.pos{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;max-width:220px}
+.pos button{height:30px;border:1px dashed var(--line);background:transparent;border-radius:6px;cursor:pointer;position:relative}
+.pos button::after{content:"";position:absolute;width:20px;height:6px;border-radius:3px;background:var(--line);top:50%;left:50%;translate:-50% -50%}
+.pos button[aria-pressed="true"]{border-style:solid;border-color:var(--pick)}
+.pos button[aria-pressed="true"]::after{background:var(--pick)}
+.pos .gap{grid-column:1/-1;height:10px;border:0;pointer-events:none}
+.pos .gap::after{display:none}
+.toggles{display:grid;grid-template-columns:1fr 1fr;gap:8px 12px}
+.toggles label{display:flex;gap:8px;align-items:center;font-size:13.5px;cursor:pointer}
+input[type=checkbox]{accent-color:var(--pick);width:16px;height:16px}
+input[type=range]{width:100%;accent-color:var(--pick)}
+input[type=text],input[type=number]{width:100%;font:inherit;font-size:14px;padding:7px 10px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink)}
+.row{display:flex;justify-content:space-between;align-items:baseline}
+.row output{font-family:var(--mono);font-size:12.5px;color:var(--muted)}
+.fire{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:6px}
+.fire button{font:600 14px var(--body);border-radius:10px;padding:11px 12px;cursor:pointer;border:1px solid var(--line);background:transparent;color:var(--ink)}
+.fire .primary{grid-column:1/-1;background:var(--pick);border-color:var(--pick);color:var(--pick-ink);font-size:15px}
+.code{margin-top:28px}
+pre{margin:0;background:#141821;color:#d6dbe6;border-radius:14px;padding:18px 20px;overflow-x:auto;font:13px/1.65 var(--mono)}
+pre .k{color:#8fa2ff}pre .s{color:#9fe0b4}pre .c{color:#6c7489}
+@media (max-width:900px){.layout{grid-template-columns:1fr}aside{position:static}header{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div>
+      <h1>toastcraft</h1>
+      <p class="lede">Toast notifications with 15 built-in designs. Pick a design, tune the options, and copy the code.</p>
+    </div>
+    <div class="install"><span>npm i toastcraft</span><button type="button" id="copyInstall">Copy</button></div>
+  </header>
+
+  <div class="layout">
+    <main>
+      <h2>Designs</h2>
+      <p class="sub">Click a design to select it and show a toast.</p>
+      <div class="grid" id="grid"></div>
+
+      <div class="code">
+        <h2>Your code</h2>
+        <p class="sub">Updates as you change the options.</p>
+        <pre id="code"></pre>
+      </div>
+    </main>
+
+    <aside aria-label="Options">
+      <fieldset><legend>Type</legend><div class="seg" id="types"></div></fieldset>
+      <fieldset><legend>Position</legend><div class="pos" id="pos"></div></fieldset>
+      <fieldset><legend>Theme</legend><div class="seg" id="themes"></div></fieldset>
+      <fieldset><legend>Animation</legend><div class="seg" id="anims"></div></fieldset>
+      <fieldset>
+        <div class="row"><label class="lbl" for="dur">Duration</label><output id="durOut"></output></div>
+        <input type="range" id="dur" min="0" max="12000" step="500" value="4000">
+      </fieldset>
+      <fieldset>
+        <label class="lbl" for="title">Message</label>
+        <input type="text" id="title" value="Changes saved">
+      </fieldset>
+      <fieldset class="toggles">
+        <label><input type="checkbox" id="description" checked> Description</label>
+        <label><input type="checkbox" id="actions"> Actions</label>
+        <label><input type="checkbox" id="progress" checked> Progress bar</label>
+        <label><input type="checkbox" id="dismissible" checked> Close button</label>
+        <label><input type="checkbox" id="pauseOnHover" checked> Pause on hover</label>
+        <label><input type="checkbox" id="swipeToDismiss" checked> Swipe to dismiss</label>
+        <label><input type="checkbox" id="closeOnClick"> Close on click</label>
+        <label><input type="checkbox" id="newestOnTop" checked> Newest at edge</label>
+      </fieldset>
+      <fieldset>
+        <label class="lbl" for="max">Max visible per position</label>
+        <input type="number" id="max" min="1" max="10" value="4">
+      </fieldset>
+      <div class="fire">
+        <button type="button" class="primary" id="show">Show toast</button>
+        <button type="button" id="promise">Promise toast</button>
+        <button type="button" id="clear">Dismiss all</button>
+      </div>
+    </aside>
+  </div>
+</div>
+
+<script>/*BUNDLE*/</script>
+<script>
+const { toast, createToaster, builtInDesigns } = Toastcraft;
+const $ = (id) => document.getElementById(id);
+const TYPES = ['success', 'error', 'warning', 'info', 'default', 'loading'];
+const POS = ['top-left', 'top-center', 'top-right', 'bottom-left', 'bottom-center', 'bottom-right'];
+const THEMES = ['auto', 'light', 'dark'];
+const ANIMS = ['slide', 'fade', 'pop', 'bounce', 'flip', 'none'];
+const COPY = {
+  success: ['Changes saved', 'Your profile is up to date.'],
+  error: ['Upload failed', 'The file is larger than 10 MB. Choose a smaller file.'],
+  warning: ['Storage almost full', '92% of your 5 GB is used.'],
+  info: ['New version available', 'Reload the page to update.'],
+  default: ['Message sent', 'Priya will see it next time she opens the app.'],
+  loading: ['Uploading report.pdf', 'This can take a few seconds.'],
+};
+const PREVIEW = {
+  success: 'Profile updated.', error: 'File is over 10 MB.', warning: '92% of 5 GB used.',
+  info: 'Reload to update.', default: 'Priya will see it soon.', loading: 'A few seconds left.',
+};
+const DEFAULTS = { position: 'top-right', design: 'minimal', theme: 'auto', animation: 'slide', duration: 4000,
+  progress: false, dismissible: true, pauseOnHover: true, swipeToDismiss: true, closeOnClick: false, newestOnTop: true, maxVisible: 5 };
+
+const state = { type: 'success', position: 'top-right', design: 'glass', theme: 'auto', animation: 'slide' };
+
+function seg(el, items, key, onPick) {
+  items.forEach((v) => {
+    const b = document.createElement('button');
+    b.type = 'button'; b.textContent = v; b.dataset.v = v;
+    b.addEventListener('click', () => { state[key] = v; sync(); onPick && onPick(v); });
+    el.appendChild(b);
+  });
+}
+seg($('types'), TYPES, 'type', (v) => { $('title').value = COPY[v][0]; renderCode(); });
+seg($('themes'), THEMES, 'theme', () => { document.documentElement.dataset.theme = state.theme === 'auto' ? '' : state.theme; });
+seg($('anims'), ANIMS, 'animation');
+POS.forEach((p, i) => {
+  if (i === 3) { const g = document.createElement('span'); g.className = 'gap'; $('pos').appendChild(g); }
+  const b = document.createElement('button');
+  b.type = 'button'; b.dataset.v = p; b.setAttribute('aria-label', p.replace('-', ' '));
+  b.addEventListener('click', () => { state.position = p; sync(); });
+  $('pos').appendChild(b);
+});
+
+// Design tiles, each with a live static preview rendered by its own toaster
+builtInDesigns.forEach((d) => {
+  const tile = document.createElement('button');
+  tile.type = 'button'; tile.className = 'tile'; tile.dataset.d = d; tile.dataset.v = d;
+  tile.innerHTML = `<div class="stage"></div><div class="tile-name">${d}</div>`;
+  tile.addEventListener('click', () => { state.design = d; sync(); fire(); });
+  $('grid').appendChild(tile);
+  const t = createToaster({ container: tile.querySelector('.stage'), design: d, animation: 'none', position: 'top-left',
+    offset: { x: 12, y: d === 'terminal' || d === 'classic' ? 10 : 18 }, width: 'calc(100% - 24px)', duration: 0, dismissible: true, toastDefaults: { ariaLive: 'off' } });
+  tile._preview = t;
+});
+function renderPreviews() {
+  document.querySelectorAll('.tile').forEach((tile) => {
+    const t = tile._preview;
+    t.configure({ theme: state.theme });
+    const title = COPY[state.type][0];
+    t.dismiss();
+    setTimeout(() => t(title, { id: 'p', type: state.type, description: PREVIEW[state.type] }), 0);
+  });
+}
+
+function opts() {
+  const o = {
+    position: state.position, design: state.design, theme: state.theme, animation: state.animation,
+    duration: +$('dur').value, maxVisible: +$('max').value || 4,
+  };
+  ['progress', 'dismissible', 'pauseOnHover', 'swipeToDismiss', 'closeOnClick', 'newestOnTop'].forEach((k) => (o[k] = $(k).checked));
+  return o;
+}
+
+function toastArgs() {
+  const extra = {};
+  if ($('description').checked) extra.description = COPY[state.type][1];
+  if ($('actions').checked) extra.actions = state.type === 'error'
+    ? [{ label: 'Try again' }, { label: 'Dismiss', variant: 'secondary' }]
+    : [{ label: 'Undo' }, { label: 'View', variant: 'secondary' }];
+  return extra;
+}
+
+function fire() {
+  const o = opts();
+  const { duration, ...cfg } = o;
+  toast.configure({ ...cfg, duration: duration || Infinity });
+  const extra = toastArgs();
+  const title = $('title').value || COPY[state.type][0];
+  const call = state.type === 'default' ? toast : toast[state.type];
+  if (state.type === 'loading') {
+    const id = toast.loading(title, extra);
+    setTimeout(() => toast.update(id, { type: 'success', title: 'Upload complete', description: 'report.pdf is ready to share.', duration: duration || 4000 }), 2200);
+  } else call(title, extra);
+}
+
+function q(s) { return `<span class="s">'${String(s).replace(/'/g, "\\'")}'</span>`; }
+function renderCode() {
+  const o = opts();
+  const cfg = Object.entries(o).filter(([k, v]) => DEFAULTS[k] !== v);
+  const extra = toastArgs();
+  const title = $('title').value || COPY[state.type][0];
+  let s = `<span class="k">import</span> { toast } <span class="k">from</span> ${q('toastcraft')};\n\n`;
+  if (cfg.length) {
+    s += `toast.<span class="k">configure</span>({\n` + cfg.map(([k, v]) => `  ${k}: ${typeof v === 'string' ? q(v) : v}`).join(',\n') + `\n});\n\n`;
+  } else s += `<span class="c">// Using the default configuration</span>\n`;
+  const fn = state.type === 'default' ? 'toast' : `toast.${state.type}`;
+  const parts = [];
+  if (extra.description) parts.push(`  description: ${q(extra.description)}`);
+  if (extra.actions) parts.push(`  actions: [\n` + extra.actions.map((a) => `    { label: ${q(a.label)}${a.variant ? `, variant: ${q(a.variant)}` : ''}, onClick: () => {} }`).join(',\n') + `\n  ]`);
+  s += parts.length ? `${fn}(${q(title)}, {\n${parts.join(',\n')}\n});` : `${fn}(${q(title)});`;
+  $('code').innerHTML = s;
+}
+
+function sync() {
+  const mark = (sel, v) => document.querySelectorAll(sel).forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.v === v)));
+  mark('#types button', state.type); mark('#themes button', state.theme); mark('#anims button', state.animation);
+  mark('#pos button', state.position); mark('.tile', state.design);
+  const d = +$('dur').value; $('durOut').textContent = d === 0 ? 'until dismissed' : `${(d / 1000).toFixed(1)} s`;
+  renderPreviews(); renderCode();
+}
+
+document.querySelectorAll('aside input').forEach((i) => i.addEventListener('input', () => { if (i.id === 'dur') sync(); else renderCode(); }));
+$('show').addEventListener('click', fire);
+$('clear').addEventListener('click', () => toast.dismiss());
+$('promise').addEventListener('click', () => {
+  const { duration, ...cfg } = opts();
+  toast.configure(cfg);
+  const fail = Math.random() < 0.3;
+  toast.promise(new Promise((res, rej) => setTimeout(() => (fail ? rej(new Error('timeout')) : res(3)), 1800)), {
+    loading: { title: 'Publishing 3 posts', description: 'Sending to your scheduled channels.' },
+    success: (n) => ({ title: `Published ${n} posts`, description: 'They are now live.' }),
+    error: { title: 'Publishing failed', description: 'The server took too long to respond. Try again.' },
+  }).catch(() => {});
+});
+$('copyInstall').addEventListener('click', async (e) => {
+  try { await navigator.clipboard.writeText('npm i toastcraft'); e.target.textContent = 'Copied'; }
+  catch { e.target.textContent = 'Copy failed'; }
+  setTimeout(() => (e.target.textContent = 'Copy'), 1500);
+});
+sync();
+</script>
+</body>
+</html>

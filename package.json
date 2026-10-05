@@ -1,0 +1,36 @@
+{
+  "name": "toastcraft",
+  "version": "0.1.0",
+  "description": "Framework-agnostic, zero-dependency toast notifications with 15 built-in designs and deep configuration.",
+  "keywords": ["toast", "notification", "snackbar", "alert", "ui", "vanilla", "angular", "react", "vue", "typescript"],
+  "author": "Anant <aanantduhan@gmail.com>",
+  "license": "MIT",
+  "type": "module",
+  "sideEffects": false,
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "unpkg": "./dist/toastcraft.global.js",
+  "jsdelivr": "./dist/toastcraft.global.js",
+  "exports": {
+    ".": {
+      "import": { "types": "./dist/index.d.ts", "default": "./dist/index.js" },
+      "require": { "types": "./dist/index.d.cts", "default": "./dist/index.cjs" }
+    },
+    "./package.json": "./package.json"
+  },
+  "files": ["dist", "README.md", "LICENSE"],
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit",
+    "prepublishOnly": "npm run typecheck && npm test && npm run build"
+  },
+  "devDependencies": {
+    "happy-dom": "^15.11.0",
+    "tsup": "^8.3.0",
+    "typescript": "^5.6.0",
+    "vitest": "^2.1.0"
+  }
+}
