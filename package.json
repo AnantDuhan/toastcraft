@@ -2,7 +2,25 @@
   "name": "toastcraft",
   "version": "0.1.1",
   "description": "Framework-agnostic, zero-dependency toast notifications with 15 built-in designs and deep configuration.",
-  "keywords": ["toast", "notification", "snackbar", "alert", "ui", "vanilla", "angular", "react", "vue", "typescript"],
+  "keywords": [
+    "toast",
+    "notification",
+    "snackbar",
+    "alert",
+    "ui",
+    "vanilla",
+    "angular",
+    "react",
+    "vue",
+    "typescript",
+    "toast notification",
+    "toast notifications",
+    "toast library",
+    "notification library",
+    "javascript toast",
+    "typescript toast",
+    "framework agnostic"
+  ],
   "author": "Anant <aanantduhan@gmail.com>",
   "license": "MIT",
   "type": "module",
@@ -14,12 +32,22 @@
   "jsdelivr": "./dist/toastcraft.global.js",
   "exports": {
     ".": {
-      "import": { "types": "./dist/index.d.ts", "default": "./dist/index.js" },
-      "require": { "types": "./dist/index.d.cts", "default": "./dist/index.cjs" }
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      },
+      "require": {
+        "types": "./dist/index.d.cts",
+        "default": "./dist/index.cjs"
+      }
     },
     "./package.json": "./package.json"
   },
-  "files": ["dist", "README.md", "LICENSE"],
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
   "scripts": {
     "build": "tsup",
     "dev": "tsup --watch",
@@ -40,7 +68,7 @@
     "url": "git+https://github.com/AnantDuhan/toastcraft.git"
   },
   "homepage": "https://toastcraft.netlify.app/",
-  "bugs": { 
-    "url": "https://github.com/AnantDuhan/toastcraft/issues" 
+  "bugs": {
+    "url": "https://github.com/AnantDuhan/toastcraft/issues"
   }
 }
