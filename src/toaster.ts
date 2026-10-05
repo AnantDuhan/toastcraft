@@ -35,7 +35,7 @@ type ResolvedConfig = ToasterConfig &
   Required<Pick<ToasterConfig,
     | 'position' | 'design' | 'theme' | 'animation' | 'duration' | 'dismissible' | 'closeOnClick' | 'pauseOnHover'
     | 'pauseOnFocusLoss' | 'progress' | 'swipeToDismiss' | 'swipeThreshold' | 'maxVisible' | 'overflow'
-    | 'newestOnTop' | 'offset' | 'gap' | 'width' | 'zIndex' | 'injectStyles' | 'ariaLabel' | 'closeOnEscape'>> & {
+    | 'newestOnTop' | 'stacked' | 'offset' | 'gap' | 'width' | 'zIndex' | 'injectStyles' | 'ariaLabel' | 'closeOnEscape'>> & {
     labels: Record<ToastType, string>;
     typeDefaults: NonNullable<ToasterConfig['typeDefaults']>;
   };
@@ -56,6 +56,7 @@ const DEFAULTS: ResolvedConfig = {
   maxVisible: 5,
   overflow: 'dismiss-oldest',
   newestOnTop: true,
+  stacked: false,
   offset: 16,
   gap: 10,
   width: 360,
@@ -558,6 +559,7 @@ export class Toaster {
     if (c.dir) r.setAttribute('dir', c.dir);
     else r.removeAttribute('dir');
     r.dataset.theme = this.resolvedTheme();
+    r.dataset.stacked = String(!!c.stacked);
     const off = typeof c.offset === 'object' && c.offset !== null ? c.offset : { x: c.offset, y: c.offset };
     const vars: Record<string, string | undefined> = {
       '--tc-z': String(c.zIndex),
