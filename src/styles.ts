@@ -17,6 +17,15 @@ const BASE = `
 .tc-region[data-position$="center"]{left:50%;transform:translateX(-50%);--tc-sx:0}
 .tc-region[data-position="top-center"]{--tc-sy:-110%}
 .tc-region[data-position="bottom-center"]{--tc-sy:110%}
+.tc-region[data-stacked="true"]{--tc-stack-overlap:44px}
+.tc-region[data-stacked="true"] .tc-item{position:relative}
+.tc-region[data-stacked="true"] .tc-item:not(:first-child){margin-top:calc(var(--tc-stack-overlap) * -1)}
+.tc-region[data-stacked="true"] .tc-item:nth-child(n+4){opacity:.72}
+.tc-region[data-stacked="true"] .tc-item:nth-child(n+5){opacity:.45}
+.tc-region[data-stacked="true"] .tc-item:nth-child(n+6){opacity:.25}
+.tc-region[data-stacked="true"] .tc-item:hover,.tc-region[data-stacked="true"]:focus-within .tc-item{z-index:2}
+.tc-region[data-stacked="true"]:hover .tc-item:not(:first-child),.tc-region[data-stacked="true"]:focus-within .tc-item:not(:first-child){margin-top:0}
+.tc-region[data-stacked="true"]:hover .tc-item:nth-child(n+4),.tc-region[data-stacked="true"]:focus-within .tc-item:nth-child(n+4){opacity:1}
 [dir="rtl"].tc-region[data-position$="left"]{--tc-sx:-110%}
 
 .tc-item{display:grid;grid-template-rows:1fr;transition:grid-template-rows .32s ease}
