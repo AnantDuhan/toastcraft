@@ -133,6 +133,8 @@ export interface ToasterConfig {
   swipeThreshold?: number;
   /** Max toasts on screen per position. */
   maxVisible?: number;
+  /** Present visible toasts as a compact stack that expands on hover. */
+  stacked?: boolean;
   /** What happens when `maxVisible` is exceeded. */
   overflow?: 'dismiss-oldest' | 'queue';
   /** Place the newest toast closest to the screen edge. */
