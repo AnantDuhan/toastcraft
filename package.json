@@ -1,6 +1,6 @@
 {
   "name": "toastcraft",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Framework-agnostic, zero-dependency toast notifications with 15 built-in designs and deep configuration.",
   "keywords": [
     "toast",
