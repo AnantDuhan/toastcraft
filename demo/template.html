@@ -24,6 +24,13 @@ body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.55 var(--body)}
 header{display:grid;grid-template-columns:1fr auto;gap:24px;align-items:end;margin-bottom:36px}
 h1{font-family:var(--display);font-weight:700;font-size:clamp(44px,7vw,84px);line-height:.95;letter-spacing:-.035em;margin:0}
 .lede{max-width:52ch;color:var(--muted);margin:14px 0 0;font-size:17px}
+.side{display:flex;flex-direction:column;align-items:flex-end;gap:12px}
+.links{display:flex;gap:16px;font-size:14px}
+.links a{color:var(--ink);text-underline-offset:3px}
+.links a:hover{color:var(--pick)}
+.codebox{position:relative}
+#copyCode{position:absolute;top:12px;right:12px;font:600 12.5px var(--body);border:1px solid #3a4152;background:#1f2430;color:#d6dbe6;border-radius:7px;padding:6px 10px;cursor:pointer}
+#copyCode:hover{background:#2a3040}
 .install{display:flex;align-items:center;gap:10px;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:10px 10px 10px 16px;font-family:var(--mono);font-size:14px;white-space:nowrap}
 .install button{font:600 13px var(--body);border:0;border-radius:7px;padding:7px 12px;background:var(--pick);color:var(--pick-ink);cursor:pointer}
 .layout{display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:28px;align-items:start}
@@ -64,7 +71,7 @@ input[type=text],input[type=number]{width:100%;font:inherit;font-size:14px;paddi
 .code{margin-top:28px}
 pre{margin:0;background:#141821;color:#d6dbe6;border-radius:14px;padding:18px 20px;overflow-x:auto;font:13px/1.65 var(--mono)}
 pre .k{color:#8fa2ff}pre .s{color:#9fe0b4}pre .c{color:#6c7489}
-@media (max-width:900px){.layout{grid-template-columns:1fr}aside{position:static}header{grid-template-columns:1fr}}
+@media (max-width:900px){.layout{grid-template-columns:1fr}aside{position:static}header{grid-template-columns:1fr}.side{align-items:flex-start}}
 </style>
 </head>
 <body>
@@ -74,7 +81,10 @@ pre .k{color:#8fa2ff}pre .s{color:#9fe0b4}pre .c{color:#6c7489}
       <h1>toastcraft</h1>
       <p class="lede">Toast notifications with 15 built-in designs. Pick a design, tune the options, and copy the code.</p>
     </div>
-    <div class="install"><span>npm i toastcraft</span><button type="button" id="copyInstall">Copy</button></div>
+    <div class="side">
+      <nav class="links"><!--LINKS--></nav>
+      <div class="install"><span>npm i toastcraft</span><button type="button" id="copyInstall">Copy</button></div>
+    </div>
   </header>
 
   <div class="layout">
@@ -86,7 +96,7 @@ pre .k{color:#8fa2ff}pre .s{color:#9fe0b4}pre .c{color:#6c7489}
       <div class="code">
         <h2>Your code</h2>
         <p class="sub">Updates as you change the options.</p>
-        <pre id="code"></pre>
+        <div class="codebox"><pre id="code"></pre><button type="button" id="copyCode">Copy code</button></div>
       </div>
     </main>
 
@@ -260,6 +270,11 @@ $('promise').addEventListener('click', () => {
     success: (n) => ({ title: `Published ${n} posts`, description: 'They are now live.' }),
     error: { title: 'Publishing failed', description: 'The server took too long to respond. Try again.' },
   }).catch(() => {});
+});
+$('copyCode').addEventListener('click', async (e) => {
+  try { await navigator.clipboard.writeText($('code').textContent); e.target.textContent = 'Copied'; }
+  catch { e.target.textContent = 'Copy failed'; }
+  setTimeout(() => (e.target.textContent = 'Copy code'), 1500);
 });
 $('copyInstall').addEventListener('click', async (e) => {
   try { await navigator.clipboard.writeText('npm i toastcraft'); e.target.textContent = 'Copied'; }
