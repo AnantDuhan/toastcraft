@@ -39,7 +39,7 @@
     "type": "git",
     "url": "git+https://github.com/AnantDuhan/toastcraft.git"
   },
-  "homepage": "https://github.com/AnantDuhan/toastcraft#readme",
+  "homepage": "https://toastcraft.netlify.app/",
   "bugs": { 
     "url": "https://github.com/AnantDuhan/toastcraft/issues" 
   }
