@@ -122,6 +122,7 @@ pre .k{color:#8fa2ff}pre .s{color:#9fe0b4}pre .c{color:#6c7489}
         <label><input type="checkbox" id="swipeToDismiss" checked> Swipe to dismiss</label>
         <label><input type="checkbox" id="closeOnClick"> Close on click</label>
         <label><input type="checkbox" id="newestOnTop" checked> Newest at edge</label>
+        <label><input type="checkbox" id="stacked"> Stacked mode</label>
       </fieldset>
       <fieldset>
         <label class="lbl" for="max">Max visible per position</label>
@@ -157,7 +158,7 @@ const PREVIEW = {
   info: 'Reload to update.', default: 'Priya will see it soon.', loading: 'A few seconds left.',
 };
 const DEFAULTS = { position: 'top-right', design: 'minimal', theme: 'auto', animation: 'slide', duration: 4000,
-  progress: false, dismissible: true, pauseOnHover: true, swipeToDismiss: true, closeOnClick: false, newestOnTop: true, maxVisible: 5 };
+  progress: false, stacked: false, dismissible: true, pauseOnHover: true, swipeToDismiss: true, closeOnClick: false, newestOnTop: true, maxVisible: 5 };
 
 const state = { type: 'success', position: 'top-right', design: 'glass', theme: 'auto', animation: 'slide' };
 
@@ -206,7 +207,7 @@ function opts() {
     position: state.position, design: state.design, theme: state.theme, animation: state.animation,
     duration: +$('dur').value, maxVisible: +$('max').value || 4,
   };
-  ['progress', 'dismissible', 'pauseOnHover', 'swipeToDismiss', 'closeOnClick', 'newestOnTop'].forEach((k) => (o[k] = $(k).checked));
+  ['progress', 'stacked', 'dismissible', 'pauseOnHover', 'swipeToDismiss', 'closeOnClick', 'newestOnTop'].forEach((k) => (o[k] = $(k).checked));
   return o;
 }
 
