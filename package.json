@@ -1,6 +1,6 @@
 {
   "name": "toastcraft",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Framework-agnostic, zero-dependency toast notifications with 15 built-in designs and deep configuration.",
   "keywords": ["toast", "notification", "snackbar", "alert", "ui", "vanilla", "angular", "react", "vue", "typescript"],
   "author": "Anant <aanantduhan@gmail.com>",
