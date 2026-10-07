@@ -73,7 +73,7 @@ and this project follows [Semantic Versioning](https://semver.org/).
 - Reduced-motion support.
 - SSR-safe initialization.
 
-[Unreleased]: https://github.com/AnantDuhan/toastcraft/compare/v0.1.2...HEAD
+[0.1.3]: https://github.com/AnantDuhan/toastcraft/releases/tag/v0.1.3
 [0.1.2]: https://github.com/AnantDuhan/toastcraft/releases/tag/v0.1.2
 [0.1.1]: https://github.com/AnantDuhan/toastcraft/releases/tag/v0.1.1
 [0.1.0]: https://github.com/AnantDuhan/toastcraft/releases/tag/v0.1.0
