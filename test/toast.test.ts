@@ -118,4 +118,25 @@ describe('toastcraft', () => {
     toast('x', { design: 'sunset' });
     expect(document.getElementById('toastcraft-styles')!.textContent).toContain('[data-design="sunset"]');
   });
+
+  it('rejects invalid custom design names', () => {
+    expect(() =>
+      registerDesign('bad;body{display:none}', '.tc-item {}')
+    ).toThrow('Invalid design name');
+
+    expect(() =>
+      registerDesign('bad selector', '.tc-item {}')
+    ).toThrow('Invalid design name');
+  });
+
+  it('escapes HTML by default', () => {
+    const toaster = createToaster();
+
+    toaster.success('<img src=x onerror=alert(1)>');
+
+    const item = document.querySelector('.tc-item');
+
+    expect(item?.querySelector('img')).toBeNull();
+    expect(item?.textContent).toContain('<img src=x onerror=alert(1)>');
+  });
 });
