@@ -5,19 +5,27 @@ All notable changes to `toastcraft` are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project follows [Semantic Versioning](https://semver.org/).
 
-## [Unreleased]
+## [0.1.3] - 2026-10-08
 
 ### Security
 
-- Harden custom design registration by validating design names before generating CSS selectors.
-- Keep user-provided HTML behind the explicit `html: true` opt-in.
-- Keep the default toast content rendering HTML-safe through `textContent`.
-- Keep custom icon HTML as an explicitly trusted-input API.
+- Hardened custom design registration by validating design names before generating CSS selectors.
+- Added tests covering invalid custom design names.
+- Added tests verifying that toast content is escaped by default.
+- Confirmed trusted HTML remains an explicit opt-in through `html: true`.
+- Updated development dependencies and regenerated the package lockfile.
+- Verified the project with `npm audit` with 0 vulnerabilities.
+
+### Tests
+
+- Expanded security-focused test coverage.
+- Verified the existing toast rendering, dismissal, queueing, promise, action, custom rendering, and design behavior.
 
 ### Maintenance
 
-- Keep development dependencies and `package-lock.json` up to date.
-- Verify the package with tests, type checking, production build, and npm audit before releases.
+- Verified TypeScript type checking.
+- Verified production builds.
+- Verified the npm package contents before release.
 
 ## [0.1.2] - 2026-10-07
 
