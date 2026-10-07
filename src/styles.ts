@@ -271,6 +271,9 @@ export function injectStyles(nonce?: string): void {
  * `)
  */
 export function registerDesign(name: string, css: string): void {
+  if (!/^[a-zA-Z0-9_-]+$/.test(name)) {
+    throw new Error('Invalid design name');
+  }
   const sel = T(name);
   const dark = D(name);
   const scoped = css.replace(/\.tc-dark\s*&/g, dark).replace(/&/g, sel);
