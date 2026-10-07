@@ -69,11 +69,13 @@ input[type=text],input[type=number]{width:100%;font:inherit;font-size:14px;paddi
 .fire button{font:600 14px var(--body);border-radius:10px;padding:11px 12px;cursor:pointer;border:1px solid var(--line);background:transparent;color:var(--ink)}
 .fire .primary{grid-column:1/-1;background:var(--pick);border-color:var(--pick);color:var(--pick-ink);font-size:15px}
 .code{margin-top:28px}
+.visits{margin:0;font-size:13px;color:var(--muted)}
 pre{margin:0;background:#141821;color:#d6dbe6;border-radius:14px;padding:18px 20px;overflow-x:auto;font:13px/1.65 var(--mono)}
 pre .k{color:#8fa2ff}pre .s{color:#9fe0b4}pre .c{color:#6c7489}
 @media (max-width:900px){.layout{grid-template-columns:1fr}aside{position:static}header{grid-template-columns:1fr}.side{align-items:flex-start}}
 </style>
 </head>
+<script data-goatcounter="https://toastcraft.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
 <body>
 <div class="wrap">
   <header>
@@ -84,6 +86,7 @@ pre .k{color:#8fa2ff}pre .s{color:#9fe0b4}pre .c{color:#6c7489}
     <div class="side">
       <nav class="links"><!--LINKS--></nav>
       <div class="install"><span>npm i toastcraft</span><button type="button" id="copyInstall">Copy</button></div>
+      <p class="visits" id="visits" hidden></p>
     </div>
   </header>
 
@@ -258,6 +261,16 @@ function sync() {
   const d = +$('dur').value; $('durOut').textContent = d === 0 ? 'until dismissed' : `${(d / 1000).toFixed(1)} s`;
   renderPreviews(); renderCode();
 }
+
+fetch('https://toastcraft.goatcounter.com/counter/TOTAL.json')
+  .then((r) => (r.ok ? r.json() : null))
+  .then((d) => {
+    if (!d) return;
+    const el = document.getElementById('visits');
+    el.textContent = `${d.count} visits`;
+    el.hidden = false;
+  })
+  .catch(() => {});
 
 document.querySelectorAll('aside input').forEach((i) => i.addEventListener('input', () => { if (i.id === 'dur') sync(); else renderCode(); }));
 $('show').addEventListener('click', fire);
