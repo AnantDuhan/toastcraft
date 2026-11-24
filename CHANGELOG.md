@@ -5,6 +5,25 @@ All notable changes to `toastcraft` are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project follows [Semantic Versioning](https://semver.org/).
 
+## [0.1.4] - 2026-11-23
+
+### Fixed
+
+- Stacked mode (`stacked: true`) now renders correctly. Previously, older toasts painted over the newest one in top positions, and in bottom positions the overlap was applied to the wrong edge, so toasts collided.
+- Stacked toasts now overlap based on each toast's measured height, so toasts with longer descriptions stack cleanly.
+- Hovering a stack now pauses every toast in it, so older toasts no longer disappear from behind the expanded stack.
+- Stacked mode always keeps the newest toast at the screen edge, even when `newestOnTop` is `false`.
+
+### Changed
+
+- Collapsed stacks show the newest toast plus up to two older ones, scaled down behind it. Expand on hover or keyboard focus.
+- Added the `--tc-peek` CSS variable to control how far older toasts peek out.
+
+### Tests
+
+- Added regression tests for stack order, re-indexing after dismissal, and pausing on hover.
+- Fixed a test that leaked a toaster into later tests.
+
 ## [0.1.3] - 2026-10-08
 
 ### Security
@@ -73,6 +92,7 @@ and this project follows [Semantic Versioning](https://semver.org/).
 - Reduced-motion support.
 - SSR-safe initialization.
 
+[0.1.4]: https://github.com/AnantDuhan/toastcraft/releases/tag/v0.1.4
 [0.1.3]: https://github.com/AnantDuhan/toastcraft/releases/tag/v0.1.3
 [0.1.2]: https://github.com/AnantDuhan/toastcraft/releases/tag/v0.1.2
 [0.1.1]: https://github.com/AnantDuhan/toastcraft/releases/tag/v0.1.1

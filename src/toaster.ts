@@ -104,6 +104,8 @@ export class Toaster {
   private darkQuery?: MediaQueryList;
   private motionQuery?: MediaQueryList;
   private focusLost = false;
+  private stackHover = new Set<Position>();
+  private heightObserver?: ResizeObserver;
 
   constructor(config: ToasterConfig = {}) {
     this.config = merge<ResolvedConfig>(DEFAULTS, config as Partial<ResolvedConfig>);
@@ -121,6 +123,7 @@ export class Toaster {
     this.config.typeDefaults = typeDefaults;
     this.regions.forEach((r) => this.styleRegion(r));
     this.records.forEach((r) => this.render(r));
+    this.regions.forEach((_, pos) => this.restack(pos));
   }
 
   getConfig(): Readonly<ToasterConfig> {
@@ -213,6 +216,9 @@ export class Toaster {
     });
     this.records.clear();
     this.queue = [];
+    this.heightObserver?.disconnect();
+    this.heightObserver = undefined;
+    this.stackHover.clear();
     this.regions.forEach((r) => r.remove());
     this.regions.clear();
     if (this.globalBound) {
@@ -258,13 +264,17 @@ export class Toaster {
     const region = this.region(rec.opts.position);
     this.render(rec);
     rec.item.dataset.state = 'enter';
-    if (this.config.newestOnTop) region.prepend(rec.item);
+    // A stack only makes sense with the newest toast at the edge, so stacked mode always prepends.
+    if (this.config.newestOnTop || this.config.stacked) region.prepend(rec.item);
     else region.append(rec.item);
     rec.state = 'enter';
     void rec.item.offsetHeight; // commit the hidden pose so the transition runs
     rec.state = 'visible';
     rec.item.dataset.state = 'visible';
     if (this.focusLost && rec.opts.pauseOnFocusLoss) this.pause(rec, 'focus-loss');
+    if (this.config.stacked && rec.opts.pauseOnHover && this.stackHover.has(rec.opts.position)) this.pause(rec, 'stack-hover');
+    this.observeHeight(rec);
+    this.restack(rec.opts.position);
     this.startTimer(rec);
     rec.opts.onShow?.(rec.ctx);
     this.emit({ type: 'show', id: rec.id, options: rec.opts });
@@ -358,6 +368,7 @@ export class Toaster {
       t.appendChild(prog);
     }
     t.toggleAttribute('data-paused', rec.pauses.size > 0);
+    if (rec.item.isConnected) this.measure(rec);
   }
 
   private setContent(el: HTMLElement, value: Content | undefined, html?: boolean) {
@@ -424,6 +435,8 @@ export class Toaster {
     clearTimeout(rec.timer);
     rec.state = 'leave';
     rec.item.dataset.state = 'leave';
+    this.heightObserver?.unobserve(rec.toast);
+    this.restack(rec.opts.position);
     if (reason !== 'swipe') {
       rec.toast.style.transform = '';
       rec.toast.style.opacity = '';
@@ -538,6 +551,51 @@ export class Toaster {
 
   /* ── regions & global listeners ── */
 
+  /** Recompute each toast's depth in its stack (0 = newest, at the screen edge). */
+  private restack(position: Position) {
+    const region = this.regions.get(position);
+    if (!region) return;
+    const items = [...region.children].filter(
+      (el): el is HTMLElement => el instanceof HTMLElement && el.dataset.state !== 'leave',
+    );
+    items.forEach((el, i) => {
+      el.style.setProperty('--tc-i', String(i));
+      el.dataset.stackI = String(i);
+      el.toggleAttribute('data-stack-hidden', i >= 3);
+    });
+  }
+
+  private measure(rec: ToastRecord) {
+    rec.item.style.setProperty('--tc-h', `${rec.toast.offsetHeight}px`);
+  }
+
+  private observeHeight(rec: ToastRecord) {
+    this.measure(rec);
+    if (typeof ResizeObserver === 'undefined') return;
+    if (!this.heightObserver) {
+      this.heightObserver = new ResizeObserver((entries) => {
+        for (const e of entries) {
+          const item = (e.target as HTMLElement).closest('.tc-item') as HTMLElement | null;
+          if (item) item.style.setProperty('--tc-h', `${(e.target as HTMLElement).offsetHeight}px`);
+        }
+      });
+    }
+    this.heightObserver.observe(rec.toast);
+  }
+
+  /** In stacked mode, hovering anywhere on the stack expands it and pauses every toast in it. */
+  private setStackHover(position: Position, hovered: boolean) {
+    if (hovered === this.stackHover.has(position)) return;
+    if (hovered) this.stackHover.add(position);
+    else this.stackHover.delete(position);
+    if (!this.config.stacked) return;
+    this.records.forEach((r) => {
+      if (r.opts.position !== position || r.state !== 'visible' || !r.opts.pauseOnHover) return;
+      if (hovered) this.pause(r, 'stack-hover');
+      else this.resume(r, 'stack-hover');
+    });
+  }
+
   private region(position: Position): HTMLElement {
     let r = this.regions.get(position);
     if (r && r.isConnected) return r;
@@ -545,6 +603,11 @@ export class Toaster {
     r.className = 'tc-region';
     r.dataset.position = position;
     this.styleRegion(r);
+    const region = r;
+    r.addEventListener('mouseover', () => this.setStackHover(position, true));
+    r.addEventListener('mouseout', (e) => {
+      if (!region.contains(e.relatedTarget as Node | null)) this.setStackHover(position, false);
+    });
     const c = this.config.container;
     const parent = (typeof c === 'string' ? document.querySelector(c) : c) ?? document.body;
     parent.appendChild(r);

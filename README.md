@@ -84,7 +84,7 @@ toast.configure({
 });
 ```
 
-Toasts overlap into a compact stack and expand when the region is hovered or focused.
+Toasts collapse into a compact stack with the newest one at the screen edge and up to two older ones peeking out behind it. Hovering the stack, or moving keyboard focus into it, expands it and pauses every toast in it. Stacked mode always places the newest toast at the edge, regardless of `newestOnTop`. Adjust how far older toasts peek out with the `--tc-peek` CSS variable (default `12px`).
 
 ### Deduplication
 

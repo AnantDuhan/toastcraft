@@ -138,5 +138,40 @@ describe('toastcraft', () => {
 
     expect(item?.querySelector('img')).toBeNull();
     expect(item?.textContent).toContain('<img src=x onerror=alert(1)>');
+    toaster.toaster.destroy();
+  });
+
+  describe('stacked mode', () => {
+    it('keeps the newest toast at the edge with depth indices', () => {
+      toast.configure({ stacked: true, newestOnTop: false });
+      toast('one'); toast('two'); toast('three'); toast('four');
+      const items = [...q('.tc-item')];
+      expect(items[0].querySelector('.tc-title')!.textContent).toBe('four');
+      expect(items.map((el) => el.dataset.stackI)).toEqual(['0', '1', '2', '3']);
+      expect(items[3].hasAttribute('data-stack-hidden')).toBe(true);
+      expect(items[1].style.getPropertyValue('--tc-h')).toMatch(/px$/);
+    });
+
+    it('re-indexes the stack when a toast is dismissed', () => {
+      toast.configure({ stacked: true });
+      const a = toast('a'); toast('b');
+      toast.dismiss(toast('c'));
+      const live = [...q('.tc-item:not([data-state="leave"])')];
+      expect(live.map((el) => el.dataset.stackI)).toEqual(['0', '1']);
+      expect(toast.isActive(a)).toBe(true);
+    });
+
+    it('pauses every toast in the stack while it is hovered', () => {
+      toast.configure({ stacked: true });
+      toast('back', { duration: 1000 });
+      toast('front', { duration: 1000 });
+      const region = q('.tc-region')[0];
+      q('.tc-toast')[0].dispatchEvent(new MouseEvent('mouseover', { bubbles: true }));
+      vi.advanceTimersByTime(5000);
+      expect(q('.tc-item[data-state="visible"]').length).toBe(2);
+      region.dispatchEvent(new MouseEvent('mouseout', { bubbles: true, relatedTarget: document.body }));
+      vi.advanceTimersByTime(1001);
+      expect(q('.tc-item[data-state="visible"]').length).toBe(0);
+    });
   });
 });

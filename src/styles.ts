@@ -17,15 +17,6 @@ const BASE = `
 .tc-region[data-position$="center"]{left:50%;transform:translateX(-50%);--tc-sx:0}
 .tc-region[data-position="top-center"]{--tc-sy:-110%}
 .tc-region[data-position="bottom-center"]{--tc-sy:110%}
-.tc-region[data-stacked="true"]{--tc-stack-overlap:44px}
-.tc-region[data-stacked="true"] .tc-item{position:relative}
-.tc-region[data-stacked="true"] .tc-item:not(:first-child){margin-top:calc(var(--tc-stack-overlap) * -1)}
-.tc-region[data-stacked="true"] .tc-item:nth-child(n+4){opacity:.72}
-.tc-region[data-stacked="true"] .tc-item:nth-child(n+5){opacity:.45}
-.tc-region[data-stacked="true"] .tc-item:nth-child(n+6){opacity:.25}
-.tc-region[data-stacked="true"] .tc-item:hover,.tc-region[data-stacked="true"]:focus-within .tc-item{z-index:2}
-.tc-region[data-stacked="true"]:hover .tc-item:not(:first-child),.tc-region[data-stacked="true"]:focus-within .tc-item:not(:first-child){margin-top:0}
-.tc-region[data-stacked="true"]:hover .tc-item:nth-child(n+4),.tc-region[data-stacked="true"]:focus-within .tc-item:nth-child(n+4){opacity:1}
 [dir="rtl"].tc-region[data-position$="left"]{--tc-sx:-110%}
 
 .tc-item{display:grid;grid-template-rows:1fr;transition:grid-template-rows .32s ease}
@@ -33,6 +24,21 @@ const BASE = `
 .tc-clip{min-height:0}
 .tc-region[data-position^="top"] .tc-spacer{padding-bottom:var(--tc-gap,10px)}
 .tc-region[data-position^="bottom"] .tc-spacer{padding-top:var(--tc-gap,10px)}
+
+/* Stacked mode: newest toast at the edge, older ones tucked behind it. Expands on hover / keyboard focus.
+   JS sets --tc-i (0 = newest) and --tc-h (toast height in px) on every item. */
+.tc-region[data-stacked="true"]{--tc-peek:12px}
+.tc-region[data-stacked="true"] .tc-item{position:relative;z-index:calc(100 - var(--tc-i,0));transition:grid-template-rows .32s ease,margin .32s ease}
+.tc-region[data-stacked="true"] .tc-clip{transition:transform .32s ease}
+.tc-region[data-stacked="true"] .tc-spacer{transition:padding .32s ease}
+.tc-region[data-stacked="true"][data-position^="top"] .tc-clip{transform-origin:center bottom}
+.tc-region[data-stacked="true"][data-position^="bottom"] .tc-clip{transform-origin:center top}
+.tc-region[data-stacked="true"]:not(:hover):not(:focus-within) .tc-spacer{padding:0}
+.tc-region[data-stacked="true"]:not(:hover):not(:focus-within) .tc-item:not([data-stack-i="0"]) .tc-clip{transform:scale(calc(1 - var(--tc-i,0) * .05))}
+.tc-region[data-stacked="true"][data-position^="top"]:not(:hover):not(:focus-within) .tc-item:not([data-stack-i="0"]){margin-top:calc(var(--tc-peek) - var(--tc-h,0px))}
+.tc-region[data-stacked="true"][data-position^="bottom"]:not(:hover):not(:focus-within) .tc-item:not([data-stack-i="0"]){margin-bottom:calc(var(--tc-peek) - var(--tc-h,0px))}
+.tc-region[data-stacked="true"]:not(:hover):not(:focus-within) .tc-item:not([data-stack-i="0"]) .tc-toast > *{opacity:0;transition:opacity .2s ease}
+.tc-region[data-stacked="true"]:not(:hover):not(:focus-within) .tc-item[data-stack-hidden] .tc-toast{opacity:0;pointer-events:none}
 
 .tc-toast{
   --tc-accent:var(--tc-c-default);--tc-bg:#fff;--tc-fg:#111827;--tc-muted:#4b5563;--tc-ease:cubic-bezier(.21,1.02,.73,1);
