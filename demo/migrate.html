@@ -1,0 +1,285 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Migrate from ngx-toastr to ngx-toastcraft</title>
+<meta name="description" content="Switch an Angular app from ngx-toastr to ngx-toastcraft in a few minutes: package swap, provider, service calls, option mapping and the two behavior changes to check.">
+<link rel="canonical" href="https://toastcraft.netlify.app/migrate-from-ngx-toastr/">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#e8ebf1;--panel:#f6f7fa;--ink:#1a2030;--muted:#5b6478;--line:#cfd4de;--pick:#3346c9;--pick-ink:#fff;
+  --code-bg:#141821;--code-ink:#d6dbe6;--code-line:#2a3040;--del:#ff8a8a;--add:#9fe0b4;
+  --display:"Bricolage Grotesque",ui-sans-serif,system-ui,sans-serif;
+  --body:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#12151c;--panel:#1a1e27;--ink:#e8ebf2;--muted:#9aa3b5;--line:#2c3240;--pick:#8b98ff;--pick-ink:#0f1222}}
+:root[data-theme="dark"]{--bg:#12151c;--panel:#1a1e27;--ink:#e8ebf2;--muted:#9aa3b5;--line:#2c3240;--pick:#8b98ff;--pick-ink:#0f1222}
+*,*::before,*::after{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 var(--body)}
+a{color:var(--ink);text-underline-offset:3px}
+a:hover{color:var(--pick)}
+.wrap{max-width:920px;margin:0 auto;padding:32px 24px 80px}
+.top{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;font-size:14px;margin-bottom:48px}
+.brand{font-family:var(--display);font-weight:700;font-size:22px;letter-spacing:-.02em;text-decoration:none}
+.top nav{display:flex;gap:16px}
+h1{font-family:var(--display);font-weight:700;font-size:clamp(36px,6vw,60px);line-height:1;letter-spacing:-.03em;margin:0;max-width:16ch}
+.lede{color:var(--muted);font-size:18px;max-width:58ch;margin:18px 0 0}
+.facts{display:flex;flex-wrap:wrap;gap:8px 20px;margin:22px 0 0;padding:0;list-style:none;font-size:14px;color:var(--muted)}
+.facts li::before{content:"";display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--pick);margin-right:8px;vertical-align:middle}
+section{margin-top:56px}
+h2{font-family:var(--display);font-weight:500;font-size:28px;letter-spacing:-.015em;margin:0 0 6px;display:flex;align-items:baseline;gap:14px}
+h2 .n{font-family:var(--mono);font-size:14px;font-weight:600;color:var(--pick);border:1.5px solid currentColor;border-radius:6px;padding:1px 7px;transform:translateY(-3px)}
+h3{font-size:15px;margin:24px 0 8px}
+p{max-width:68ch}
+.sub{color:var(--muted);margin:0 0 18px}
+code{font-family:var(--mono);font-size:.88em;background:var(--panel);border:1px solid var(--line);border-radius:5px;padding:1px 5px}
+.pair{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.block{position:relative;min-width:0}
+.block .label{font-size:13px;font-weight:600;color:var(--muted);margin:0 0 6px}
+pre{margin:0;background:var(--code-bg);color:var(--code-ink);border-radius:12px;padding:16px 18px;overflow-x:auto;font:13.5px/1.65 var(--mono)}
+pre .k{color:#8fa2ff}pre .s{color:#9fe0b4}pre .c{color:#6c7489}pre .del{color:var(--del);text-decoration:line-through;text-decoration-thickness:1px}
+.copy{position:absolute;top:30px;right:10px;font:600 12px var(--body);border:1px solid #3a4152;background:#1f2430;color:#d6dbe6;border-radius:7px;padding:5px 9px;cursor:pointer}
+.copy:hover{background:#2a3040}
+.block.solo .copy{top:10px}
+.block:not(.solo) .copy{top:-5px;right:0;background:var(--panel);color:var(--ink);border-color:var(--line)}
+.block:not(.solo) .copy:hover{background:var(--bg)}
+td code{white-space:nowrap}
+.nw{white-space:nowrap}
+.table-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:12px;background:var(--panel)}
+table{width:100%;border-collapse:collapse;font-size:14.5px}
+th,td{text-align:left;vertical-align:top;padding:10px 14px;border-bottom:1px solid var(--line)}
+th{font-size:13px;color:var(--muted);font-weight:600;background:color-mix(in srgb,var(--line) 30%,transparent)}
+tr:last-child td{border-bottom:0}
+td:first-child{white-space:nowrap}
+.checks{display:grid;gap:12px;margin:0;padding:0;list-style:none}
+.checks li{background:var(--panel);border:1px solid var(--line);border-left:4px solid var(--pick);border-radius:10px;padding:14px 16px}
+.checks strong{display:block;margin-bottom:2px}
+.try{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}
+.try button{font:600 14px var(--body);border-radius:10px;padding:10px 14px;cursor:pointer;border:1px solid var(--line);background:transparent;color:var(--ink)}
+.try .primary{background:var(--pick);border-color:var(--pick);color:var(--pick-ink)}
+footer{margin-top:72px;padding-top:24px;border-top:1px solid var(--line);color:var(--muted);font-size:14px}
+:focus-visible{outline:2px solid var(--pick);outline-offset:2px}
+@media (max-width:720px){.pair{grid-template-columns:minmax(0,1fr)}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top">
+    <a class="brand" href="../#angular">toastcraft</a>
+    <nav>
+      <a href="../#angular">Playground</a>
+      <a href="https://www.npmjs.com/package/ngx-toastcraft">npm</a>
+      <a href="https://github.com/AnantDuhan/toastcraft/tree/main/angular/projects/ngx-toastcraft#readme">Angular docs</a>
+    </nav>
+  </div>
+
+  <h1>Move from <span class="nw">ngx-toastr</span> to <span class="nw">ngx-toastcraft</span></h1>
+  <p class="lede">Most apps switch in a few minutes. You keep the same idea, a provider and an injectable service, and get 15 designs, component toasts and an HTTP error interceptor.</p>
+  <ul class="facts">
+    <li>Angular 18 to 22</li>
+    <li>No CSS import</li>
+    <li>No <span style="font-family:var(--mono)">@angular/animations</span></li>
+    <li>Works with or without zone.js</li>
+  </ul>
+
+  <section>
+    <h2><span class="n">1</span>Swap the packages</h2>
+    <p class="sub">Uninstall <span class="nw">ngx-toastr</span> and install <span class="nw">ngx-toastcraft</span>.</p>
+    <div class="block solo">
+<pre>npm uninstall ngx-toastr
+npm i ngx-toastcraft</pre>
+      <button type="button" class="copy">Copy</button>
+    </div>
+    <h3>Remove the <span class="nw">ngx-toastr</span> stylesheet from <code>angular.json</code></h3>
+    <p class="sub"><span class="nw">ngx-toastcraft</span> injects its own styles, so there's nothing to add back.</p>
+    <div class="block solo">
+<pre>"styles": [
+  "src/styles.css",
+  <span class="del">"node_modules/ngx-toastr/toastr.css"</span>
+]</pre>
+    </div>
+  </section>
+
+  <section>
+    <h2><span class="n">2</span>Swap the provider</h2>
+    <p class="sub">With <code>NgModule</code>s, put <code>provideToastcraft()</code> in the module's <code>providers</code> where <code>ToastrModule.forRoot()</code> was.</p>
+    <div class="pair">
+      <div class="block">
+        <p class="label">Before</p>
+<pre><span class="k">import</span> { provideToastr } <span class="k">from</span> <span class="s">'ngx-toastr'</span>;
+
+provideToastr({
+  timeOut: 5000,
+  positionClass: <span class="s">'toast-bottom-right'</span>,
+  progressBar: true,
+});</pre>
+      </div>
+      <div class="block">
+        <p class="label">After</p>
+<pre><span class="k">import</span> { provideToastcraft } <span class="k">from</span> <span class="s">'ngx-toastcraft'</span>;
+
+provideToastcraft({
+  duration: 5000,
+  position: <span class="s">'bottom-right'</span>,
+  progress: true,
+});</pre>
+        <button type="button" class="copy">Copy</button>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2><span class="n">3</span>Swap the service and flip the arguments</h2>
+    <p class="sub"><span class="nw">ngx-toastr</span> takes the message first and the title second. <span class="nw">ngx-toastcraft</span> takes the title first, with the message as <code>description</code>. If you only pass one argument, the call stays the same.</p>
+    <div class="pair">
+      <div class="block">
+        <p class="label">Before</p>
+<pre><span class="k">private</span> toastr = inject(ToastrService);
+
+<span class="k">this</span>.toastr.success(
+  <span class="s">'Your profile is up to date.'</span>,
+  <span class="s">'Saved'</span>,
+);
+<span class="k">this</span>.toastr.error(<span class="s">'Upload failed'</span>);</pre>
+      </div>
+      <div class="block">
+        <p class="label">After</p>
+<pre><span class="k">private</span> toast = inject(ToastService);
+
+<span class="k">this</span>.toast.success(<span class="s">'Saved'</span>, {
+  description: <span class="s">'Your profile is up to date.'</span>,
+});
+<span class="k">this</span>.toast.error(<span class="s">'Upload failed'</span>);</pre>
+        <button type="button" class="copy">Copy</button>
+      </div>
+    </div>
+    <div class="try">
+      <button type="button" class="primary" id="trySuccess">Show this toast</button>
+      <button type="button" id="tryError">Show the error toast</button>
+    </div>
+  </section>
+
+  <section>
+    <h2><span class="n">4</span>Check two behavior changes</h2>
+    <p class="sub">These defaults differ from <span class="nw">ngx-toastr</span>. Keep the old behavior with one option each.</p>
+    <ul class="checks">
+      <li><strong>Clicking a toast no longer closes it.</strong>Add <code>closeOnClick: true</code> to <code>provideToastcraft()</code> to keep <span class="nw">ngx-toastr</span>'s tap-to-dismiss.</li>
+      <li><strong>Toasts show a close button by default.</strong>Add <code>dismissible: false</code> to hide it.</li>
+    </ul>
+    <div class="try">
+      <button type="button" id="tryOld">Try <span class="nw">ngx-toastr</span>'s behavior</button>
+    </div>
+  </section>
+
+  <section>
+    <h2>Option mapping</h2>
+    <p class="sub">Global options go in <code>provideToastcraft()</code>. Per-toast options can be set for every toast with <code>toastDefaults</code>, or per type with <code>typeDefaults</code>.</p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th><span class="nw">ngx-toastr</span></th><th><span class="nw">ngx-toastcraft</span></th></tr></thead>
+        <tbody>
+          <tr><td><code>timeOut</code></td><td><code>duration</code></td></tr>
+          <tr><td><code>disableTimeOut: true</code></td><td><code>duration: 0</code></td></tr>
+          <tr><td><code>extendedTimeOut</code></td><td>Not needed. Toasts pause on hover and resume with the time left.</td></tr>
+          <tr><td><code>closeButton</code></td><td><code>dismissible</code> (on by default)</td></tr>
+          <tr><td><code>tapToDismiss</code> (on by default)</td><td><code>closeOnClick</code> (off by default)</td></tr>
+          <tr><td><code>progressBar</code></td><td><code>progress</code></td></tr>
+          <tr><td><code>enableHtml</code></td><td><code>html</code> per toast, or <code>toastDefaults: { html: true }</code> for all toasts. Trusted content only.</td></tr>
+          <tr><td><code>positionClass: 'toast-top-right'</code></td><td><code>position: 'top-right'</code>, also <code>top-left</code>, <code>top-center</code> and the <code>bottom-*</code> versions</td></tr>
+          <tr><td><code>newestOnTop</code></td><td><code>newestOnTop</code></td></tr>
+          <tr><td><code>maxOpened</code></td><td><code>maxVisible</code></td></tr>
+          <tr><td><code>autoDismiss: true</code></td><td><code>overflow: 'dismiss-oldest'</code></td></tr>
+          <tr><td><code>autoDismiss: false</code></td><td><code>overflow: 'queue'</code></td></tr>
+          <tr><td><code>preventDuplicates</code></td><td>Pass the same <code>id</code>. A second toast with that id updates the first.</td></tr>
+          <tr><td><code>toastClass</code>, <code>titleClass</code>, <code>messageClass</code></td><td><code>className</code>, <code>classNames.title</code>, <code>classNames.description</code>, per toast or in <code>toastDefaults</code></td></tr>
+          <tr><td><code>iconClasses</code></td><td><code>icon</code> per toast, or per type with <code>typeDefaults: { error: { icon: '…' } }</code></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <h2>Methods and events</h2>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th><span class="nw">ngx-toastr</span></th><th><span class="nw">ngx-toastcraft</span></th></tr></thead>
+        <tbody>
+          <tr><td><code>toastr.clear()</code></td><td><code>toast.dismiss()</code></td></tr>
+          <tr><td><code>toastr.clear(id)</code>, <code>toastr.remove(id)</code></td><td><code>toast.dismiss(id)</code></td></tr>
+          <tr><td><code>activeToast.toastId</code> (number)</td><td>The id returned by each call (string)</td></tr>
+          <tr><td><code>activeToast.onTap</code></td><td><code>onClick</code> option</td></tr>
+          <tr><td><code>activeToast.onShown</code>, <code>onHidden</code></td><td><code>onShow</code>, <code>onDismiss</code> options</td></tr>
+          <tr><td><code>activeToast.onAction</code></td><td><code>actions</code> option</td></tr>
+          <tr><td>Custom toast component</td><td><code>toast.component(YourComponent)</code> with <code>inject(ToastRef)</code></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <h2>New things you get</h2>
+    <p class="sub">Optional, but worth a look once the switch is done.</p>
+    <div class="pair">
+      <div class="block">
+        <p class="label">A toast on every failed HTTP request</p>
+<pre><span class="k">import</span> { toastcraftHttpErrors } <span class="k">from</span> <span class="s">'ngx-toastcraft'</span>;
+
+provideHttpClient(
+  withInterceptors([toastcraftHttpErrors()]),
+);</pre>
+        <button type="button" class="copy">Copy</button>
+      </div>
+      <div class="block">
+        <p class="label">Loading, then success or error, for an Observable</p>
+<pre><span class="k">this</span>.http.post(<span class="s">'/api/reports'</span>, report).pipe(
+  <span class="k">this</span>.toast.track({
+    loading: <span class="s">'Saving report…'</span>,
+    success: <span class="s">'Report saved'</span>,
+    error: <span class="s">'Could not save the report'</span>,
+  }),
+).subscribe();</pre>
+        <button type="button" class="copy">Copy</button>
+      </div>
+    </div>
+    <p>Pick one of the 15 designs in the <a href="../#angular">playground</a> and copy the generated Angular config.</p>
+  </section>
+
+  <footer>
+    <span class="nw">ngx-toastcraft</span> is MIT licensed. Found something this guide doesn't cover? <a href="https://github.com/AnantDuhan/toastcraft/issues">Open an issue</a>.
+  </footer>
+</div>
+
+<script>/*BUNDLE*/</script>
+<script>
+const { toast } = Toastcraft;
+toast.configure({ design: 'glass', position: 'bottom-right' });
+
+document.querySelectorAll('.copy').forEach((btn) => {
+  btn.addEventListener('click', async () => {
+    const text = btn.parentElement.querySelector('pre').textContent;
+    try {
+      await navigator.clipboard.writeText(text);
+      toast.success('Copied to clipboard', { id: 'copied', duration: 2000 });
+    } catch {
+      toast.error('Copy failed', { id: 'copied', description: 'Select the code and copy it manually.' });
+    }
+  });
+});
+
+document.getElementById('trySuccess').addEventListener('click', () =>
+  toast.success('Saved', { description: 'Your profile is up to date.' }));
+document.getElementById('tryError').addEventListener('click', () => toast.error('Upload failed'));
+document.getElementById('tryOld').addEventListener('click', () =>
+  toast.info('Click anywhere on me', {
+    description: 'closeOnClick: true, dismissible: false',
+    closeOnClick: true,
+    dismissible: false,
+  }));
+</script>
+</body>
+</html>
