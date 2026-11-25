@@ -121,20 +121,19 @@ toastcraft uses the DOM directly, so the same API works from Angular, React, Vue
 
 ### Angular
 
+Use the official adapter, [`ngx-toastcraft`](https://www.npmjs.com/package/ngx-toastcraft). It adds `provideToastcraft()`, an injectable `ToastService`, component and template toasts, an RxJS `track()` operator and an HTTP error interceptor. It supports Angular 18 to 22 and includes a [migration guide from ngx-toastr](./angular/projects/ngx-toastcraft/README.md#migrating-from-ngx-toastr).
+
+```bash
+npm i ngx-toastcraft
+```
+
 ```ts
-import { Injectable } from '@angular/core';
-import { toast, type ToastOptions } from 'toastcraft';
+// app.config.ts
+providers: [provideToastcraft({ design: 'glass' })]
 
-@Injectable({ providedIn: 'root' })
-export class ToastService {
-  success(message: string, options?: ToastOptions) {
-    return toast.success(message, options);
-  }
-
-  error(message: string, options?: ToastOptions) {
-    return toast.error(message, options);
-  }
-}
+// any component
+private toast = inject(ToastService);
+save() { this.toast.success('Changes saved'); }
 ```
 
 ### React
@@ -218,7 +217,8 @@ Current Chrome, Edge, Firefox and Safari. toastcraft uses modern CSS features in
 - [x] Queue / overflow control
 - [x] Stacked mode
 - [x] Custom design registration
-- [ ] Official framework adapters
+- [x] Angular adapter ([`ngx-toastcraft`](https://www.npmjs.com/package/ngx-toastcraft))
+- [ ] React and Vue adapters
 - [ ] More examples and integrations
 
 ## License

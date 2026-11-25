@@ -1,0 +1,37 @@
+{
+  "name": "toastcraft-angular-workspace",
+  "version": "0.0.0",
+  "scripts": {
+    "ng": "ng",
+    "start": "ng serve",
+    "build": "ng build",
+    "watch": "ng build --watch --configuration development",
+    "test": "ng test",
+    "build:lib": "ng build ngx-toastcraft",
+    "test:lib": "ng test ngx-toastcraft --watch=false",
+    "demo": "ng build ngx-toastcraft && ng serve demo",
+    "publish:lib": "npm run test:lib && npm run build:lib && cp projects/ngx-toastcraft/CHANGELOG.md dist/ngx-toastcraft/ && npm publish ./dist/ngx-toastcraft"
+  },
+  "private": true,
+  "packageManager": "npm@10.9.9",
+  "dependencies": {
+    "@angular/common": "^22.3.0",
+    "@angular/compiler": "^22.3.0",
+    "@angular/core": "^22.3.0",
+    "@angular/forms": "^22.3.0",
+    "@angular/platform-browser": "^22.3.0",
+    "@angular/router": "^22.3.0",
+    "rxjs": "~7.8.0",
+    "toastcraft": "^0.1.4",
+    "tslib": "^2.3.0"
+  },
+  "devDependencies": {
+    "@angular/build": "^22.3.0",
+    "@angular/cli": "^22.3.0",
+    "@angular/compiler-cli": "^22.3.0",
+    "jsdom": "^31.0.0",
+    "prettier": "^3.8.1",
+    "typescript": "~6.0.2",
+    "vitest": "^5.0.0"
+  }
+}

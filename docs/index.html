@@ -28,9 +28,20 @@ h1{font-family:var(--display);font-weight:700;font-size:clamp(44px,7vw,84px);lin
 .links{display:flex;gap:16px;font-size:14px}
 .links a{color:var(--ink);text-underline-offset:3px}
 .links a:hover{color:var(--pick)}
-.codebox{position:relative}
+.codebox{position:relative;min-width:0}
+.layout > main{min-width:0}
 #copyCode{position:absolute;top:12px;right:12px;font:600 12.5px var(--body);border:1px solid #3a4152;background:#1f2430;color:#d6dbe6;border-radius:7px;padding:6px 10px;cursor:pointer}
 #copyCode:hover{background:#2a3040}
+.fw{display:inline-flex;padding:3px;gap:2px;border:1px solid var(--line);border-radius:10px;background:var(--panel)}
+.fw button{font:600 13px var(--body);border:0;border-radius:7px;padding:6px 12px;background:transparent;color:var(--muted);cursor:pointer}
+.fw button:hover{color:var(--ink)}
+.fw button[aria-pressed="true"]{background:var(--ink);color:var(--panel)}
+.fw button:focus-visible{outline:2px solid var(--pick);outline-offset:1px}
+.fw-note{margin:0;max-width:34ch;text-align:right;font-size:13px;color:var(--muted)}
+.nw{white-space:nowrap}
+.fw-note a{color:var(--ink);text-underline-offset:3px}
+.code-head{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;flex-wrap:wrap;margin-bottom:12px}
+.code-head .sub{margin:0}
 .install{display:flex;align-items:center;gap:10px;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:10px 10px 10px 16px;font-family:var(--mono);font-size:14px;white-space:nowrap}
 .install button{font:600 13px var(--body);border:0;border-radius:7px;padding:7px 12px;background:var(--pick);color:var(--pick-ink);cursor:pointer}
 .layout{display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:28px;align-items:start}
@@ -72,7 +83,7 @@ input[type=text],input[type=number]{width:100%;font:inherit;font-size:14px;paddi
 .visits{margin:0;font-size:13px;color:var(--muted)}
 pre{margin:0;background:#141821;color:#d6dbe6;border-radius:14px;padding:18px 20px;overflow-x:auto;font:13px/1.65 var(--mono)}
 pre .k{color:#8fa2ff}pre .s{color:#9fe0b4}pre .c{color:#6c7489}
-@media (max-width:900px){.layout{grid-template-columns:1fr}aside{position:static}header{grid-template-columns:1fr}.side{align-items:flex-start}}
+@media (max-width:900px){.layout{grid-template-columns:minmax(0,1fr)}aside{position:static}header{grid-template-columns:1fr}.side{align-items:flex-start}.fw-note{text-align:left}}
 </style>
 </head>
 <script data-goatcounter="https://toastcraft.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
@@ -81,11 +92,16 @@ pre .k{color:#8fa2ff}pre .s{color:#9fe0b4}pre .c{color:#6c7489}
   <header>
     <div>
       <h1>toastcraft</h1>
-      <p class="lede">Toast notifications with 15 built-in designs. Pick a design, tune the options, and copy the code.</p>
+      <p class="lede">Toast notifications with 15 built-in designs, for plain JavaScript and Angular. Pick a design, tune the options, and copy the code for your framework.</p>
     </div>
     <div class="side">
-      <nav class="links"><a href="https://www.npmjs.com/package/toastcraft">npm</a><a href="https://github.com/AnantDuhan/toastcraft">GitHub</a></nav>
-      <div class="install"><span>npm i toastcraft</span><button type="button" id="copyInstall">Copy</button></div>
+      <nav class="links"><a href="https://www.npmjs.com/package/toastcraft">npm</a><a href="https://github.com/AnantDuhan/toastcraft">GitHub</a><a href="https://github.com/AnantDuhan/toastcraft/tree/main/angular/projects/ngx-toastcraft#readme">Angular docs</a></nav>
+      <div class="fw" role="group" aria-label="Framework">
+        <button type="button" data-fw="js">JavaScript</button>
+        <button type="button" data-fw="angular">Angular</button>
+      </div>
+      <div class="install"><span id="installCmd">npm i toastcraft</span><button type="button" id="copyInstall">Copy</button></div>
+      <p class="fw-note" id="fwNote" hidden>For Angular 18 to 22. Coming from <span class="nw">ngx-toastr</span>? <a href="https://github.com/AnantDuhan/toastcraft/blob/main/angular/projects/ngx-toastcraft/README.md#migrating-from-ngx-toastr">Read the migration guide</a>.</p>
       <p class="visits" id="visits" hidden></p>
     </div>
   </header>
@@ -97,8 +113,16 @@ pre .k{color:#8fa2ff}pre .s{color:#9fe0b4}pre .c{color:#6c7489}
       <div class="grid" id="grid"></div>
 
       <div class="code">
-        <h2>Your code</h2>
-        <p class="sub">Updates as you change the options.</p>
+        <div class="code-head">
+          <div>
+            <h2>Your code</h2>
+            <p class="sub" id="codeSub">Updates as you change the options.</p>
+          </div>
+          <div class="fw" role="group" aria-label="Code framework">
+            <button type="button" data-fw="js">JavaScript</button>
+            <button type="button" data-fw="angular">Angular</button>
+          </div>
+        </div>
         <div class="codebox"><pre id="code"></pre><button type="button" id="copyCode">Copy code</button></div>
       </div>
     </main>
@@ -372,7 +396,18 @@ const PREVIEW = {
 const DEFAULTS = { position: 'top-right', design: 'minimal', theme: 'auto', animation: 'slide', duration: 4000,
   progress: false, stacked: false, dismissible: true, pauseOnHover: true, swipeToDismiss: true, closeOnClick: false, newestOnTop: true, maxVisible: 5 };
 
-const state = { type: 'success', position: 'top-right', design: 'glass', theme: 'auto', animation: 'slide' };
+const state = { type: 'success', position: 'top-right', design: 'glass', theme: 'auto', animation: 'slide', fw: 'js' };
+try {
+  const saved = localStorage.getItem('toastcraft-fw');
+  if (saved === 'js' || saved === 'angular') state.fw = saved;
+} catch {}
+if (location.hash === '#angular') state.fw = 'angular';
+const INSTALL = { js: 'npm i toastcraft', angular: 'npm i ngx-toastcraft' };
+document.querySelectorAll('[data-fw]').forEach((b) => b.addEventListener('click', () => {
+  state.fw = b.dataset.fw;
+  try { localStorage.setItem('toastcraft-fw', state.fw); } catch {}
+  sync();
+}));
 
 function seg(el, items, key, onPick) {
   items.forEach((v) => {
@@ -451,15 +486,37 @@ function renderCode() {
   const cfg = Object.entries(o).filter(([k, v]) => DEFAULTS[k] !== v);
   const extra = toastArgs();
   const title = $('title').value || COPY[state.type][0];
-  let s = `<span class="k">import</span> { toast } <span class="k">from</span> ${q('toastcraft')};\n\n`;
-  if (cfg.length) {
-    s += `toast.<span class="k">configure</span>({\n` + cfg.map(([k, v]) => `  ${k}: ${typeof v === 'string' ? q(v) : v}`).join(',\n') + `\n});\n\n`;
-  } else s += `<span class="c">// Using the default configuration</span>\n`;
-  const fn = state.type === 'default' ? 'toast' : `toast.${state.type}`;
+  const val = (v) => (typeof v === 'string' ? q(v) : v);
   const parts = [];
-  if (extra.description) parts.push(`  description: ${q(extra.description)}`);
-  if (extra.actions) parts.push(`  actions: [\n` + extra.actions.map((a) => `    { label: ${q(a.label)}${a.variant ? `, variant: ${q(a.variant)}` : ''}, onClick: () => {} }`).join(',\n') + `\n  ]`);
-  s += parts.length ? `${fn}(${q(title)}, {\n${parts.join(',\n')}\n});` : `${fn}(${q(title)});`;
+  if (extra.description) parts.push(`description: ${q(extra.description)}`);
+  if (extra.actions) parts.push(`actions: [\n` + extra.actions.map((a) => `  { label: ${q(a.label)}${a.variant ? `, variant: ${q(a.variant)}` : ''}, onClick: () => {} }`).join(',\n') + `\n]`);
+  const indent = (text, n) => text.split('\n').map((l) => ' '.repeat(n) + l).join('\n');
+  const call = (fn, pad) => (parts.length
+    ? `${fn}(${q(title)}, {\n${indent(parts.join(',\n'), pad + 2)}\n${' '.repeat(pad)}});`
+    : `${fn}(${q(title)});`);
+  const method = state.type === 'default' ? 'show' : state.type;
+  let s;
+
+  if (state.fw === 'angular') {
+    const config = cfg.length ? `{\n${cfg.map(([k, v]) => `      ${k}: ${val(v)}`).join(',\n')},\n    }` : '';
+    s = `<span class="c">// app.config.ts</span>\n`
+      + `<span class="k">import</span> { provideToastcraft } <span class="k">from</span> ${q('ngx-toastcraft')};\n\n`
+      + `<span class="k">export const</span> appConfig: ApplicationConfig = {\n`
+      + `  providers: [\n    <span class="k">provideToastcraft</span>(${config}),\n  ],\n};\n\n`
+      + `<span class="c">// any component or service</span>\n`
+      + `<span class="k">import</span> { ToastService } <span class="k">from</span> ${q('ngx-toastcraft')};\n\n`
+      + `<span class="k">export class</span> ProfileComponent {\n`
+      + `  <span class="k">private</span> toast = inject(ToastService);\n\n`
+      + `  save() {\n    ${call(`this.toast.<span class="k">${method}</span>`, 4)}\n  }\n}`;
+    $('codeSub').textContent = 'Angular code. Updates as you change the options.';
+  } else {
+    s = `<span class="k">import</span> { toast } <span class="k">from</span> ${q('toastcraft')};\n\n`;
+    if (cfg.length) {
+      s += `toast.<span class="k">configure</span>({\n` + cfg.map(([k, v]) => `  ${k}: ${val(v)}`).join(',\n') + `\n});\n\n`;
+    } else s += `<span class="c">// Using the default configuration</span>\n`;
+    s += call(state.type === 'default' ? 'toast' : `toast.${state.type}`, 0);
+    $('codeSub').textContent = 'Updates as you change the options.';
+  }
   $('code').innerHTML = s;
 }
 
@@ -467,6 +524,9 @@ function sync() {
   const mark = (sel, v) => document.querySelectorAll(sel).forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.v === v)));
   mark('#types button', state.type); mark('#themes button', state.theme); mark('#anims button', state.animation);
   mark('#pos button', state.position); mark('.tile', state.design);
+  document.querySelectorAll('[data-fw]').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.fw === state.fw)));
+  $('installCmd').textContent = INSTALL[state.fw];
+  $('fwNote').hidden = state.fw !== 'angular';
   const d = +$('dur').value; $('durOut').textContent = d === 0 ? 'until dismissed' : `${(d / 1000).toFixed(1)} s`;
   renderPreviews(); renderCode();
 }
@@ -500,7 +560,7 @@ $('copyCode').addEventListener('click', async (e) => {
   setTimeout(() => (e.target.textContent = 'Copy code'), 1500);
 });
 $('copyInstall').addEventListener('click', async (e) => {
-  try { await navigator.clipboard.writeText('npm i toastcraft'); e.target.textContent = 'Copied'; }
+  try { await navigator.clipboard.writeText(INSTALL[state.fw]); e.target.textContent = 'Copied'; }
   catch { e.target.textContent = 'Copy failed'; }
   setTimeout(() => (e.target.textContent = 'Copy'), 1500);
 });

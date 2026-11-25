@@ -14,7 +14,12 @@ const links = [
 ].filter(Boolean).join('');
 
 const html = read('./template.html')
-  .replace('<!--LINKS-->', '<a href="https://www.npmjs.com/package/toastcraft">npm</a><a href="https://github.com/AnantDuhan/toastcraft">GitHub</a>')
+  .replace(
+    '<!--LINKS-->',
+    '<a href="https://www.npmjs.com/package/toastcraft">npm</a>' +
+      '<a href="https://github.com/AnantDuhan/toastcraft">GitHub</a>' +
+      '<a href="https://github.com/AnantDuhan/toastcraft/tree/main/angular/projects/ngx-toastcraft#readme">Angular docs</a>',
+  )
   .replace('/*BUNDLE*/', () => bundle);
 
 // Output to docs/ so GitHub Pages can deploy it as-is.
