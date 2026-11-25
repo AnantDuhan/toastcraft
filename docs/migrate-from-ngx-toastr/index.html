@@ -4,6 +4,10 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Migrate from ngx-toastr to ngx-toastcraft</title>
+<link rel="icon" href="/favicon.ico" sizes="32x32">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<meta name="theme-color" content="#161c30">
 <meta name="description" content="Switch an Angular app from ngx-toastr to ngx-toastcraft in a few minutes: package swap, provider, service calls, option mapping and the two behavior changes to check.">
 <link rel="canonical" href="https://toastcraft.netlify.app/migrate-from-ngx-toastr/">
 <meta property="og:type" content="article">
@@ -36,6 +40,7 @@ a{color:var(--ink);text-underline-offset:3px}
 a:hover{color:var(--pick)}
 .wrap{max-width:920px;margin:0 auto;padding:32px 24px 80px}
 .top{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;font-size:14px;margin-bottom:48px}
+.brand .mark{border-radius:22%;box-shadow:0 0 0 1px color-mix(in srgb,var(--ink) 14%,transparent);width:30px;height:30px;vertical-align:-7px;margin-right:9px}
 .brand{font-family:var(--display);font-weight:700;font-size:22px;letter-spacing:-.02em;text-decoration:none}
 .top nav{display:flex;gap:16px}
 h1{font-family:var(--display);font-weight:700;font-size:clamp(36px,6vw,60px);line-height:1;letter-spacing:-.03em;margin:0;max-width:16ch}
@@ -81,7 +86,7 @@ footer{margin-top:72px;padding-top:24px;border-top:1px solid var(--line);color:v
 <body>
 <div class="wrap">
   <div class="top">
-    <a class="brand" href="../#angular">toastcraft</a>
+    <a class="brand" href="../#angular"><img class="mark" src="../favicon.svg" alt="">toastcraft</a>
     <nav>
       <a href="../#angular">Playground</a>
       <a href="https://www.npmjs.com/package/ngx-toastcraft">npm</a>

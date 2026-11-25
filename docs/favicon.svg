@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <title>toastcraft</title>
+  <rect width="64" height="64" rx="15" fill="#161c30"/>
+  <rect x="19" y="11" width="26" height="9" rx="4.5" fill="#4a5179"/>
+  <rect x="14" y="17" width="36" height="11" rx="5.5" fill="#6e77ac"/>
+  <rect x="9" y="25" width="46" height="27" rx="9" fill="#f1f3fa"/>
+  <circle cx="21.5" cy="38.5" r="5.5" fill="#3346c9"/>
+  <rect x="31" y="35.5" width="16" height="6" rx="3" fill="#c1c4ce"/>
+</svg>

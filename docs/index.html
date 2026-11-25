@@ -4,6 +4,10 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>toastcraft playground</title>
+<link rel="icon" href="/favicon.ico" sizes="32x32">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<meta name="theme-color" content="#161c30">
 <meta name="description" content="Toast notifications with 15 built-in designs for JavaScript and Angular. Pick a design, tune the options and copy the code.">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="toastcraft">
@@ -34,6 +38,7 @@ html{scroll-padding-top:env(safe-area-inset-top,0px)}
 body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.55 var(--body)}
 .wrap{max-width:1240px;margin:0 auto;padding:40px 24px 64px}
 header{display:grid;grid-template-columns:1fr auto;gap:24px;align-items:end;margin-bottom:36px}
+h1 .mark{box-shadow:0 0 0 1px color-mix(in srgb,var(--ink) 14%,transparent);width:.82em;height:.82em;margin-right:.16em;vertical-align:-.06em;border-radius:22%}
 h1{font-family:var(--display);font-weight:700;font-size:clamp(44px,7vw,84px);line-height:.95;letter-spacing:-.035em;margin:0}
 .lede{max-width:52ch;color:var(--muted);margin:14px 0 0;font-size:17px}
 .side{display:flex;flex-direction:column;align-items:flex-end;gap:12px}
@@ -103,7 +108,7 @@ pre .k{color:#8fa2ff}pre .s{color:#9fe0b4}pre .c{color:#6c7489}
 <div class="wrap">
   <header>
     <div>
-      <h1>toastcraft</h1>
+      <h1><img class="mark" src="favicon.svg" alt="">toastcraft</h1>
       <p class="lede">Toast notifications with 15 built-in designs, for plain JavaScript and Angular. Pick a design, tune the options, and copy the code for your framework.</p>
     </div>
     <div class="side">
