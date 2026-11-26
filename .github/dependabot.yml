@@ -6,8 +6,16 @@ updates:
       interval: weekly
     open-pull-requests-limit: 5
     groups:
+      # Minor and patch updates arrive together. Major updates come as separate
+      # pull requests, so a breaking change is reviewed on its own.
       dev-dependencies:
         dependency-type: development
+        update-types: ["minor", "patch"]
+    ignore:
+      # TypeScript 7 removed the JavaScript API that tsup uses to generate .d.ts files.
+      # Remove this once tsup supports TypeScript 7.
+      - dependency-name: "typescript"
+        update-types: ["version-update:semver-major"]
 
   - package-ecosystem: npm
     directory: /angular

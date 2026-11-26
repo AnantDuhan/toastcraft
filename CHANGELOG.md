@@ -7,6 +7,10 @@ and this project follows [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Fixed
+
+- The build failed after TypeScript 7 was installed, because TypeScript 7 removed the JavaScript API that tsup uses to generate type definitions. TypeScript is pinned to 6.0 for now. The published files are unchanged.
+
 ### Changed
 
 - Updated the `happy-dom` test environment to 21.x to fix a high-severity advisory. It's a development dependency only and doesn't affect the published package.
