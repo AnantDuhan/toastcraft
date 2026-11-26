@@ -5,6 +5,12 @@ All notable changes to `toastcraft` are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project follows [Semantic Versioning](https://semver.org/).
 
+## [Unreleased]
+
+### Changed
+
+- Updated the `happy-dom` test environment to 21.x to fix a high-severity advisory. It's a development dependency only and doesn't affect the published package.
+
 ## [0.1.4] - 2026-11-23
 
 ### Fixed

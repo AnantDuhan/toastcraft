@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "description": "Angular toast notifications with 15 built-in designs. Service, standalone provider, component and template toasts, RxJS operator and HTTP error interceptor. Powered by toastcraft.",
   "keywords": ["angular", "toast", "toastr", "ngx-toastr", "notification", "snackbar", "alert", "angular toast", "standalone", "signals", "toastcraft"],
-  "author": "Anant <aanantduhan@gmail.com>",
+  "author": "Anant <duhananant@gmail.com>",
   "license": "MIT",
   "homepage": "https://toastcraft.netlify.app/",
   "repository": {

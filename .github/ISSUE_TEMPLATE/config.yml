@@ -1,0 +1,11 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Try every design in the playground
+    url: https://toastcraft.netlify.app/
+    about: Check how a design or option behaves before reporting it.
+  - name: Migrating from ngx-toastr
+    url: https://toastcraft.netlify.app/migrate-from-ngx-toastr/
+    about: Option mapping and behavior changes for Angular apps.
+  - name: Report a security vulnerability
+    url: https://github.com/AnantDuhan/toastcraft/security/advisories/new
+    about: Please report security problems privately, not in a public issue.

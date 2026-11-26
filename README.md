@@ -1,3 +1,5 @@
+<img src="https://raw.githubusercontent.com/AnantDuhan/toastcraft/main/docs/favicon.svg" alt="" width="72" height="72">
+
 # toastcraft
 
 ### Toast notifications without locking you into one visual style.
@@ -9,7 +11,9 @@
 [![bundle size](https://img.shields.io/bundlephobia/minzip/toastcraft?style=flat-square)](https://bundlephobia.com/package/toastcraft)
 [![license](https://img.shields.io/npm/l/toastcraft?style=flat-square)](https://github.com/AnantDuhan/toastcraft/blob/main/LICENSE)
 
-**[Live Playground →](https://toastcraft.netlify.app/)** · **[npm](https://www.npmjs.com/package/toastcraft)** · **[GitHub](https://github.com/AnantDuhan/toastcraft)**
+**[Live Playground →](https://toastcraft.netlify.app/)** · **[npm](https://www.npmjs.com/package/toastcraft)** · **[GitHub](https://github.com/AnantDuhan/toastcraft)** · **[Contributing](https://github.com/AnantDuhan/toastcraft/blob/main/CONTRIBUTING.md)**
+
+> Using Angular? Install [`ngx-toastcraft`](https://www.npmjs.com/package/ngx-toastcraft) for a provider, an injectable service, component toasts and an HTTP error interceptor. Coming from ngx-toastr? Read the [migration guide](https://toastcraft.netlify.app/migrate-from-ngx-toastr/).
 
 ![toastcraft designs](https://raw.githubusercontent.com/AnantDuhan/toastcraft/main/docs/showcase.svg)
 
@@ -121,7 +125,7 @@ toastcraft uses the DOM directly, so the same API works from Angular, React, Vue
 
 ### Angular
 
-Use the official adapter, [`ngx-toastcraft`](https://www.npmjs.com/package/ngx-toastcraft). It adds `provideToastcraft()`, an injectable `ToastService`, component and template toasts, an RxJS `track()` operator and an HTTP error interceptor. It supports Angular 18 to 22 and includes a [migration guide from ngx-toastr](./angular/projects/ngx-toastcraft/README.md#migrating-from-ngx-toastr).
+Use the official adapter, [`ngx-toastcraft`](https://www.npmjs.com/package/ngx-toastcraft). It adds `provideToastcraft()`, an injectable `ToastService`, component and template toasts, an RxJS `track()` operator and an HTTP error interceptor. It supports Angular 18 to 22 and includes a [migration guide from ngx-toastr](https://toastcraft.netlify.app/migrate-from-ngx-toastr/).
 
 ```bash
 npm i ngx-toastcraft
@@ -220,6 +224,16 @@ Current Chrome, Edge, Firefox and Safari. toastcraft uses modern CSS features in
 - [x] Angular adapter ([`ngx-toastcraft`](https://www.npmjs.com/package/ngx-toastcraft))
 - [ ] React and Vue adapters
 - [ ] More examples and integrations
+
+## Contributing
+
+Contributions are welcome, from typo fixes to new designs and framework adapters. Start with [CONTRIBUTING.md](https://github.com/AnantDuhan/toastcraft/blob/main/CONTRIBUTING.md), or pick an issue labelled [`good first issue`](https://github.com/AnantDuhan/toastcraft/labels/good%20first%20issue).
+
+- Found a bug? [Open a bug report](https://github.com/AnantDuhan/toastcraft/issues/new/choose).
+- Have an idea? [Suggest a feature](https://github.com/AnantDuhan/toastcraft/issues/new/choose).
+- Found a security problem? Follow [SECURITY.md](https://github.com/AnantDuhan/toastcraft/blob/main/SECURITY.md) and report it privately.
+
+Everyone taking part is expected to follow the [Code of Conduct](https://github.com/AnantDuhan/toastcraft/blob/main/CODE_OF_CONDUCT.md).
 
 ## License
 

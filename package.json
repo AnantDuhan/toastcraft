@@ -21,7 +21,7 @@
     "typescript toast",
     "framework agnostic"
   ],
-  "author": "Anant <aanantduhan@gmail.com>",
+  "author": "Anant <duhananant@gmail.com>",
   "license": "MIT",
   "type": "module",
   "sideEffects": false,
@@ -58,7 +58,7 @@
     "deploy": "npm run demo && git add docs && git commit -m \"docs: update playground\" && git push"
   },
   "devDependencies": {
-    "happy-dom": "^20.14.5",
+    "happy-dom": "^21.0.4",
     "tsup": "^8.3.0",
     "typescript": "5.7.3",
     "vitest": "^5.0.3"

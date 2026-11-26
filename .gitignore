@@ -3,3 +3,7 @@ dist
 demo/index.html
 *.log
 .DS_Store
+
+# release and patch artifacts
+*.tgz
+*.patch
