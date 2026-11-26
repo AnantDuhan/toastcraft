@@ -56,6 +56,8 @@ npm run demo         # serve the Angular demo app at http://localhost:4200
 5. Add a line to `CHANGELOG.md` under `## [Unreleased]`. Create that heading if it doesn't exist.
 6. Open a pull request and fill in the template.
 
+Once a maintainer approves your pull request, it's squash-merged automatically and your branch is deleted. Squash merging turns the pull request title into the commit message, so give it a Conventional Commit title like the examples below.
+
 ### Commit messages
 
 Use [Conventional Commits](https://www.conventionalcommits.org/):

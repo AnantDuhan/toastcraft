@@ -1,0 +1,29 @@
+name: Auto-merge
+
+# Turns on GitHub's auto-merge for every ready pull request. GitHub then merges it
+# by itself once the rules on `main` are met (an approval, and passing checks if you
+# require them). Nothing is merged before it's approved.
+#
+# pull_request_target runs this file from `main`, never from the pull request, and
+# the job never checks out the pull request's code, so a fork can't change what it does.
+
+on:
+  pull_request_target:
+    types: [opened, reopened, ready_for_review]
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  enable-auto-merge:
+    # Skip drafts. Dependabot pull requests are reviewed and merged by hand.
+    if: ${{ !github.event.pull_request.draft && github.event.pull_request.user.login != 'dependabot[bot]' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Enable squash auto-merge
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_URL: ${{ github.event.pull_request.html_url }}
+        run: gh pr merge "$PR_URL" --auto --squash
