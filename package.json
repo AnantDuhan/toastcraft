@@ -59,8 +59,8 @@
   },
   "devDependencies": {
     "happy-dom": "^21.0.4",
-    "tsup": "^8.3.0",
-    "typescript": "5.7.3",
+    "tsup": "^9.0.0",
+    "typescript": "7.0.2",
     "vitest": "^5.0.3"
   },
   "repository": {
